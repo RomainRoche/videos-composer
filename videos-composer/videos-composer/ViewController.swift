@@ -9,7 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
+    @IBOutlet private var firstButton: UIButton?;
+    @IBOutlet private var secondButtin: UIButton?;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -20,6 +23,14 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction
+    private func captureFirstVideo() {
+        print("capturing first video");
+    }
+    
+    @IBAction func getSecondVideo() {
+        print("getting second video");
+    }
 
 }
 

@@ -193,6 +193,7 @@
 				TargetAttributes = {
 					72F1BB5E1F59602900A87B76 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = U3P6QEA4RH;
 						ProvisioningStyle = Automatic;
 					};
 					72F1BB721F59602900A87B76 = {
@@ -414,6 +415,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = U3P6QEA4RH;
 				INFOPLIST_FILE = "videos-composer/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.romainroche.videos-composer";
@@ -426,6 +428,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = U3P6QEA4RH;
 				INFOPLIST_FILE = "videos-composer/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.romainroche.videos-composer";
