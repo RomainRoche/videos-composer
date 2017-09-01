@@ -28,7 +28,8 @@ class ViewController: UIViewController {
         print("capturing first video");
     }
     
-    @IBAction func getSecondVideo() {
+    @IBAction
+    private func getSecondVideo() {
         print("getting second video");
     }
 
