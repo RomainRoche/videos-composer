@@ -12,19 +12,27 @@ import AVFoundation
 
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    // MARK: IBoutlets
+    
     @IBOutlet private var firstButton: UIButton?
     @IBOutlet private var secondButtin: UIButton?
     @IBOutlet private var capturedVideoView: UIView?
     
+    // MARK: properties
+    
     private var capturedVideo: NSData?
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
+    
+    // MARK: properties override
     
     override public var shouldAutorotate: Bool {
         get {
             return false;
         }
     }
+    
+    // MARK: methods override
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +44,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Dispose of any resources that can be recreated.
     }
     
+    // MARK: UIImagePickerControllerDelegate
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let moviePath = info[UIImagePickerControllerMediaURL] as! URL!
         self.installCapturedVideo(moviePath)
@@ -45,6 +55,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true)
     }
+    
+    // MARK: @IBAction
 
     @IBAction
     private func captureFirstVideo() {
@@ -67,6 +79,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private func getSecondVideo() {
         print("getting second video")
     }
+    
+    // MARK: methods
     
     private func installCapturedVideo(_ imageURL: URL!) {
         self.player?.pause()
