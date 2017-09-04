@@ -39,17 +39,23 @@
                                     <action selector="getSecondVideo" destination="BYZ-38-t0r" eventType="touchUpInside" id="iLK-Ir-Fjk"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZvO-TD-yEu">
+                                <rect key="frame" x="20" y="136" width="378" height="303"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <connections>
+                        <outlet property="capturedVideoView" destination="ZvO-TD-yEu" id="2Sp-5Y-6Pe"/>
                         <outlet property="firstButton" destination="S3t-F6-dCt" id="Mqu-gM-tNA"/>
                         <outlet property="secondButtin" destination="9fu-Yu-Qba" id="Xgg-0N-Qe9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="138.98050974512745"/>
+            <point key="canvasLocation" x="136.23188405797103" y="138.58695652173915"/>
         </scene>
     </scenes>
 </document>
