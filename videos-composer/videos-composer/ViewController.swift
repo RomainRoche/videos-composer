@@ -20,9 +20,16 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     
+    override public var shouldAutorotate: Bool {
+        get {
+            return false;
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -32,11 +39,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let moviePath = info[UIImagePickerControllerMediaURL] as! URL!
         self.installCapturedVideo(moviePath)
-        self.dismiss(animated: true, completion: {})
+        self.dismiss(animated: true)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.dismiss(animated: true, completion: {})
+        self.dismiss(animated: true)
     }
 
     @IBAction
