@@ -20,7 +20,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     // MARK: properties
     
-    private var capturedVideo: NSData?
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     
@@ -36,6 +35,10 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.playbackDidEnd),
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: self.player?.currentItem)
     }
     
 
@@ -81,6 +84,14 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     // MARK: methods
+    
+    @objc private func playbackDidEnd(_ notification: Notification) {
+        if let item: AVPlayerItem = notification.object as? AVPlayerItem {
+            item.seek(to: kCMTimeZero, completionHandler: { (ok) in
+                self.player?.play()
+            })
+        }
+    }
     
     private func installCapturedVideo(_ imageURL: URL!) {
         self.player?.pause()
