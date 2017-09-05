@@ -23,17 +23,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S3t-F6-dCt">
-                                <rect key="frame" x="144" y="28" width="126" height="36"/>
+                                <rect key="frame" x="147" y="28" width="121" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="Get first video"/>
+                                <state key="normal" title="From Camera"/>
                                 <connections>
                                     <action selector="captureFirstVideo" destination="BYZ-38-t0r" eventType="touchUpInside" id="zCi-g8-Gwj"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9fu-Yu-Qba">
-                                <rect key="frame" x="128" y="72" width="158" height="36"/>
+                                <rect key="frame" x="151" y="72" width="113" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <state key="normal" title="Get second video"/>
+                                <state key="normal" title="From Library"/>
                                 <connections>
                                     <action selector="getSecondVideo" destination="BYZ-38-t0r" eventType="touchUpInside" id="iLK-Ir-Fjk"/>
                                 </connections>
@@ -45,22 +45,35 @@
                                     <constraint firstAttribute="width" secondItem="ZvO-TD-yEu" secondAttribute="height" multiplier="378:283" id="LaH-VK-xiK"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Dh-s1-WYZ">
+                                <rect key="frame" x="18" y="407.33333333333337" width="378" height="283.33333333333337"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="3Dh-s1-WYZ" secondAttribute="height" multiplier="378:283" id="bOc-aG-emO"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="ZvO-TD-yEu" firstAttribute="top" secondItem="9fu-Yu-Qba" secondAttribute="bottom" constant="8" id="AZB-tR-Ien"/>
+                            <constraint firstAttribute="trailing" secondItem="3Dh-s1-WYZ" secondAttribute="trailing" constant="18" id="MOq-Ya-CHS"/>
                             <constraint firstItem="S3t-F6-dCt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="PCz-c7-iNh"/>
+                            <constraint firstItem="3Dh-s1-WYZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="18" id="Xs3-Um-OA7"/>
                             <constraint firstItem="9fu-Yu-Qba" firstAttribute="top" secondItem="S3t-F6-dCt" secondAttribute="bottom" constant="8" id="dgI-RP-pb2"/>
+                            <constraint firstItem="3Dh-s1-WYZ" firstAttribute="top" secondItem="ZvO-TD-yEu" secondAttribute="bottom" constant="8" id="dtV-dI-3Ri"/>
                             <constraint firstItem="9fu-Yu-Qba" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="iyx-1M-mWG"/>
                             <constraint firstItem="ZvO-TD-yEu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="k0I-5v-snt"/>
+                            <constraint firstItem="3Dh-s1-WYZ" firstAttribute="top" secondItem="ZvO-TD-yEu" secondAttribute="bottom" constant="8" id="oIA-2M-pz3"/>
                             <constraint firstItem="ZvO-TD-yEu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="18" id="vBE-Th-af8"/>
                             <constraint firstItem="S3t-F6-dCt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xra-00-Qj2"/>
                             <constraint firstAttribute="trailing" secondItem="ZvO-TD-yEu" secondAttribute="trailing" constant="18" id="ygM-fb-mIJ"/>
+                            <constraint firstItem="3Dh-s1-WYZ" firstAttribute="width" secondItem="3Dh-s1-WYZ" secondAttribute="height" multiplier="378:283" id="z04-ZB-j9v"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="capturedVideoView" destination="ZvO-TD-yEu" id="2Sp-5Y-6Pe"/>
                         <outlet property="firstButton" destination="S3t-F6-dCt" id="Mqu-gM-tNA"/>
+                        <outlet property="savedVideoView" destination="3Dh-s1-WYZ" id="v5M-d6-1vW"/>
                         <outlet property="secondButtin" destination="9fu-Yu-Qba" id="Xgg-0N-Qe9"/>
                     </connections>
                 </viewController>

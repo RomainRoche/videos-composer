@@ -17,11 +17,15 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     @IBOutlet private var firstButton: UIButton?
     @IBOutlet private var secondButtin: UIButton?
     @IBOutlet private var capturedVideoView: UIView?
+    @IBOutlet private var savedVideoView: UIView?
     
     // MARK: properties
     
     private var capturedPlayer: AVPlayer?
     private var capturedPlayerLayer: AVPlayerLayer?
+    
+    private var savedPlayer: AVPlayer?
+    private var savedPlayerLayer: AVPlayerLayer?
     
     // MARK: properties override
     
@@ -42,11 +46,18 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
                                                selector: #selector(self.playbackDidEnd),
                                                name: .AVPlayerItemDidPlayToEndTime,
                                                object: self.capturedPlayer?.currentItem)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.playbackDidEnd),
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: self.savedPlayer?.currentItem)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         if (self.capturedPlayer?.currentItem != nil) {
             self.capturedPlayer?.play()
+        }
+        if (self.savedPlayer?.currentItem != nil) {
+            self.savedPlayer?.play()
         }
     }
     
@@ -63,7 +74,11 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let moviePath = info[UIImagePickerControllerMediaURL] as! URL!
-        self.installCapturedVideo(moviePath)
+        if (picker.sourceType == .camera) {
+            self.installCapturedVideo(moviePath)
+        } else if (picker.sourceType == .photoLibrary) {
+            self.installSavedVideo(moviePath)
+        }
         self.dismiss(animated: true)
     }
     
@@ -75,32 +90,41 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
 
     @IBAction
     private func captureFirstVideo() {
-        
         if (!UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)) {
             print("no camera available")
             return
         }
-        
-        let picker: UIImagePickerController = UIImagePickerController()
-        picker.delegate = self
-        picker.allowsEditing = true
-        picker.sourceType = UIImagePickerControllerSourceType.camera
-        picker.mediaTypes = [kUTTypeMovie as String]
-        self.present(picker, animated: true)
-        
+        self.getVideo(.camera)
     }
     
     @IBAction
     private func getSecondVideo() {
-        print("getting second video")
+        if (!UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary)) {
+            print("no photo library")
+            return
+        }
+        self.getVideo(.photoLibrary)
     }
     
     // MARK: methods
     
+    private func getVideo(_ type: UIImagePickerControllerSourceType) {
+        let picker: UIImagePickerController = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        picker.sourceType = type
+        picker.mediaTypes = [kUTTypeMovie as String]
+        self.present(picker, animated: true)
+    }
+    
     @objc private func playbackDidEnd(_ notification: Notification) {
         if let item: AVPlayerItem = notification.object as? AVPlayerItem {
             item.seek(to: kCMTimeZero, completionHandler: { (ok) in
-                self.capturedPlayer?.play()
+                if (item == self.capturedPlayer?.currentItem) {
+                    self.capturedPlayer?.play()
+                } else if (item == self.savedPlayer?.currentItem) {
+                    self.savedPlayer?.play()
+                }
             })
         }
     }
@@ -117,6 +141,19 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
             self.capturedVideoView?.layer.addSublayer(self.capturedPlayerLayer!)
             self.capturedPlayer?.isMuted = true // no sound
             self.capturedPlayer?.play()
+        }
+    }
+    
+    private func installSavedVideo(_ imageURL: URL! ) {
+        DispatchQueue.main.async {
+            self.savedPlayer?.pause()
+            self.savedPlayerLayer?.removeFromSuperlayer()
+            self.savedPlayer = AVPlayer(url: imageURL)
+            self.savedPlayerLayer = AVPlayerLayer(player: self.savedPlayer)
+            self.savedPlayerLayer!.frame = (self.savedVideoView?.bounds)!
+            self.savedVideoView?.layer.addSublayer(self.savedPlayerLayer!)
+            self.savedPlayer?.isMuted = true // no sound
+            self.savedPlayer?.play()
         }
     }
 
