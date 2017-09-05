@@ -12,7 +12,7 @@ import AVFoundation
 
 class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    // MARK: IBoutlets
+    // MARK: IBOutlets
     
     @IBOutlet private var firstButton: UIButton?
     @IBOutlet private var secondButtin: UIButton?
