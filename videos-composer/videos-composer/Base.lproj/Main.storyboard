@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,31 +22,41 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S3t-F6-dCt">
-                                <rect key="frame" x="16" y="60" width="382" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S3t-F6-dCt">
+                                <rect key="frame" x="144" y="28" width="126" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Get first video"/>
                                 <connections>
                                     <action selector="captureFirstVideo" destination="BYZ-38-t0r" eventType="touchUpInside" id="zCi-g8-Gwj"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9fu-Yu-Qba">
-                                <rect key="frame" x="16" y="98" width="382" height="30"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9fu-Yu-Qba">
+                                <rect key="frame" x="128" y="72" width="158" height="36"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <state key="normal" title="Get second video"/>
                                 <connections>
                                     <action selector="getSecondVideo" destination="BYZ-38-t0r" eventType="touchUpInside" id="iLK-Ir-Fjk"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZvO-TD-yEu">
-                                <rect key="frame" x="20" y="136" width="378" height="303"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZvO-TD-yEu">
+                                <rect key="frame" x="18" y="115.99999999999997" width="378" height="283.33333333333326"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="ZvO-TD-yEu" secondAttribute="height" multiplier="378:283" id="LaH-VK-xiK"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="ZvO-TD-yEu" firstAttribute="top" secondItem="9fu-Yu-Qba" secondAttribute="bottom" constant="8" id="AZB-tR-Ien"/>
+                            <constraint firstItem="S3t-F6-dCt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="PCz-c7-iNh"/>
+                            <constraint firstItem="9fu-Yu-Qba" firstAttribute="top" secondItem="S3t-F6-dCt" secondAttribute="bottom" constant="8" id="dgI-RP-pb2"/>
+                            <constraint firstItem="9fu-Yu-Qba" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="iyx-1M-mWG"/>
+                            <constraint firstItem="ZvO-TD-yEu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="k0I-5v-snt"/>
+                            <constraint firstItem="ZvO-TD-yEu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="18" id="vBE-Th-af8"/>
+                            <constraint firstItem="S3t-F6-dCt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xra-00-Qj2"/>
+                            <constraint firstAttribute="trailing" secondItem="ZvO-TD-yEu" secondAttribute="trailing" constant="18" id="ygM-fb-mIJ"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="capturedVideoView" destination="ZvO-TD-yEu" id="2Sp-5Y-6Pe"/>
