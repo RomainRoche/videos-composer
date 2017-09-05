@@ -50,9 +50,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
                                                selector: #selector(self.playbackDidEnd),
                                                name: .AVPlayerItemDidPlayToEndTime,
                                                object: self.savedPlayer?.currentItem)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
         if (self.capturedPlayer?.currentItem != nil) {
             self.capturedPlayer?.play()
         }
@@ -75,9 +72,9 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let moviePath = info[UIImagePickerControllerMediaURL] as! URL!
         if (picker.sourceType == .camera) {
-            self.installCapturedVideo(moviePath)
+            self.installVideo(moviePath, view: self.capturedVideoView, player: &self.capturedPlayer, playerLayer: &self.capturedPlayerLayer)
         } else if (picker.sourceType == .photoLibrary) {
-            self.installSavedVideo(moviePath)
+            self.installVideo(moviePath, view: self.savedVideoView, player: &self.savedPlayer, playerLayer: &self.savedPlayerLayer)
         }
         self.dismiss(animated: true)
     }
@@ -129,32 +126,16 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         }
     }
     
-    private func installCapturedVideo(_ imageURL: URL!) {
-        // Dispatched on main because for some reason adding the layer could
-        // not work... TODO: fix that
-        DispatchQueue.main.async {
-            self.capturedPlayer?.pause()
-            self.capturedPlayerLayer?.removeFromSuperlayer()
-            self.capturedPlayer = AVPlayer(url: imageURL)
-            self.capturedPlayerLayer = AVPlayerLayer(player: self.capturedPlayer)
-            self.capturedPlayerLayer!.frame = (self.capturedVideoView?.bounds)!
-            self.capturedVideoView?.layer.addSublayer(self.capturedPlayerLayer!)
-            self.capturedPlayer?.isMuted = true // no sound
-            self.capturedPlayer?.play()
-        }
-    }
-    
-    private func installSavedVideo(_ imageURL: URL! ) {
-        DispatchQueue.main.async {
-            self.savedPlayer?.pause()
-            self.savedPlayerLayer?.removeFromSuperlayer()
-            self.savedPlayer = AVPlayer(url: imageURL)
-            self.savedPlayerLayer = AVPlayerLayer(player: self.savedPlayer)
-            self.savedPlayerLayer!.frame = (self.savedVideoView?.bounds)!
-            self.savedVideoView?.layer.addSublayer(self.savedPlayerLayer!)
-            self.savedPlayer?.isMuted = true // no sound
-            self.savedPlayer?.play()
-        }
+    private func installVideo(_ imageURL: URL!, view: UIView?, player: inout AVPlayer?, playerLayer: inout AVPlayerLayer?) {
+        player?.pause()
+        playerLayer?.removeFromSuperlayer()
+        player = AVPlayer(url: imageURL)
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer?.frame = (view?.bounds)!
+        view?.layer.addSublayer(playerLayer!)
+        player?.isMuted = true
+        player?.play()
+        print("has", (view?.layer.sublayers?.count)!, "sublayers")
     }
 
 }
