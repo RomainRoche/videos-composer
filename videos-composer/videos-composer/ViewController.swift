@@ -20,8 +20,8 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     // MARK: properties
     
-    private var player: AVPlayer?
-    private var playerLayer: AVPlayerLayer?
+    private var capturedPlayer: AVPlayer?
+    private var capturedPlayerLayer: AVPlayerLayer?
     
     // MARK: properties override
     
@@ -41,12 +41,12 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.playbackDidEnd),
                                                name: .AVPlayerItemDidPlayToEndTime,
-                                               object: self.player?.currentItem)
+                                               object: self.capturedPlayer?.currentItem)
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if (self.player?.currentItem != nil) {
-            self.player?.play()
+        if (self.capturedPlayer?.currentItem != nil) {
+            self.capturedPlayer?.play()
         }
     }
     
@@ -100,7 +100,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     @objc private func playbackDidEnd(_ notification: Notification) {
         if let item: AVPlayerItem = notification.object as? AVPlayerItem {
             item.seek(to: kCMTimeZero, completionHandler: { (ok) in
-                self.player?.play()
+                self.capturedPlayer?.play()
             })
         }
     }
@@ -109,14 +109,14 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         // Dispatched on main because for some reason adding the layer could
         // not work... TODO: fix that
         DispatchQueue.main.async {
-            self.player?.pause()
-            self.playerLayer?.removeFromSuperlayer()
-            self.player = AVPlayer(url: imageURL)
-            self.playerLayer = AVPlayerLayer(player: self.player)
-            self.playerLayer!.frame = (self.capturedVideoView?.bounds)!
-            self.capturedVideoView?.layer.addSublayer(self.playerLayer!)
-            self.player?.isMuted = true // no sound
-            self.player?.play()
+            self.capturedPlayer?.pause()
+            self.capturedPlayerLayer?.removeFromSuperlayer()
+            self.capturedPlayer = AVPlayer(url: imageURL)
+            self.capturedPlayerLayer = AVPlayerLayer(player: self.capturedPlayer)
+            self.capturedPlayerLayer!.frame = (self.capturedVideoView?.bounds)!
+            self.capturedVideoView?.layer.addSublayer(self.capturedPlayerLayer!)
+            self.capturedPlayer?.isMuted = true // no sound
+            self.capturedPlayer?.play()
         }
     }
 
