@@ -35,10 +35,23 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.playbackDidEnd),
                                                name: .AVPlayerItemDidPlayToEndTime,
                                                object: self.player?.currentItem)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if (self.player?.currentItem != nil) {
+            self.player?.play()
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        NotificationCenter.default.removeObserver(self)
     }
     
 
@@ -94,14 +107,18 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     private func installCapturedVideo(_ imageURL: URL!) {
-        self.player?.pause()
-        self.playerLayer?.removeFromSuperlayer()
-        self.player = AVPlayer(url: imageURL)
-        self.playerLayer = AVPlayerLayer(player: player)
-        self.playerLayer!.frame = (self.capturedVideoView?.bounds)!
-        self.capturedVideoView?.layer.addSublayer(self.playerLayer!)
-        self.player?.isMuted = true // no sound
-        self.player?.play()
+        // Dispatched on main because for some reason adding the layer could
+        // not work... TODO: fix that
+        DispatchQueue.main.async {
+            self.player?.pause()
+            self.playerLayer?.removeFromSuperlayer()
+            self.player = AVPlayer(url: imageURL)
+            self.playerLayer = AVPlayerLayer(player: self.player)
+            self.playerLayer!.frame = (self.capturedVideoView?.bounds)!
+            self.capturedVideoView?.layer.addSublayer(self.playerLayer!)
+            self.player?.isMuted = true // no sound
+            self.player?.play()
+        }
     }
 
 }
