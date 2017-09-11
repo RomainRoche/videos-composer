@@ -10,6 +10,23 @@ import UIKit
 import MobileCoreServices
 import AVFoundation
 
+extension AVPlayer {
+    
+    func currentItemResolution() -> CGSize? {
+        guard let tracks = self.currentItem?.asset.tracks(withMediaType: AVMediaTypeVideo)
+            , tracks.count > 0 else {
+                return nil
+        }
+        let track = tracks[0]
+        let transform = track.preferredTransform
+        var size = __CGSizeApplyAffineTransform(track.naturalSize, transform)
+        size.width = fabs(size.width)
+        size.height = fabs(size.height)
+        return size
+    }
+    
+}
+
 class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     // MARK: IBOutlets
@@ -71,12 +88,13 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         let moviePath = info[UIImagePickerControllerMediaURL] as! URL!
-        if (picker.sourceType == .camera) {
-            self.installVideo(moviePath, view: self.capturedVideoView, player: &self.capturedPlayer, playerLayer: &self.capturedPlayerLayer)
-        } else if (picker.sourceType == .photoLibrary) {
-            self.installVideo(moviePath, view: self.savedVideoView, player: &self.savedPlayer, playerLayer: &self.savedPlayerLayer)
+        self.dismiss(animated: true) {
+            if (picker.sourceType == .camera) {
+                self.installVideo(moviePath, view: self.capturedVideoView, player: &self.capturedPlayer, playerLayer: &self.capturedPlayerLayer)
+            } else if (picker.sourceType == .photoLibrary) {
+                self.installVideo(moviePath, view: self.savedVideoView, player: &self.savedPlayer, playerLayer: &self.savedPlayerLayer)
+            }
         }
-        self.dismiss(animated: true)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -108,6 +126,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     private func getVideo(_ type: UIImagePickerControllerSourceType) {
         let picker: UIImagePickerController = UIImagePickerController()
         picker.delegate = self
+        picker.videoQuality = .typeHigh
         picker.allowsEditing = true
         picker.sourceType = type
         picker.mediaTypes = [kUTTypeMovie as String]
@@ -126,16 +145,16 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         }
     }
     
-    private func installVideo(_ imageURL: URL!, view: UIView?, player: inout AVPlayer?, playerLayer: inout AVPlayerLayer?) {
+    private func installVideo(_ videoURL: URL!, view: UIView?, player: inout AVPlayer?, playerLayer: inout AVPlayerLayer?) {
         player?.pause()
         playerLayer?.removeFromSuperlayer()
-        player = AVPlayer(url: imageURL)
+        player = AVPlayer(url: videoURL)
+        print("player video size: \(player?.currentItemResolution()?.width ?? 0)x\(player?.currentItemResolution()?.height ?? 0)")
         playerLayer = AVPlayerLayer(player: player)
         playerLayer?.frame = (view?.bounds)!
         view?.layer.addSublayer(playerLayer!)
         player?.isMuted = true
         player?.play()
-        print("has", (view?.layer.sublayers?.count)!, "sublayers")
     }
 
 }
