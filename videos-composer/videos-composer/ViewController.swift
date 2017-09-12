@@ -12,12 +12,18 @@ import AVFoundation
 
 extension AVPlayer {
     
-    func currentItemResolution() -> CGSize? {
+    func currentVideoTrack() -> AVAssetTrack? {
         guard let tracks = self.currentItem?.asset.tracks(withMediaType: AVMediaTypeVideo)
             , tracks.count > 0 else {
                 return nil
         }
-        let track = tracks[0]
+        return tracks[0]
+    }
+    
+    func currentVideoTrackResolution() -> CGSize {
+        guard let track: AVAssetTrack = self.currentVideoTrack() else {
+                return CGSize.zero
+        }
         let transform = track.preferredTransform
         var size = __CGSizeApplyAffineTransform(track.naturalSize, transform)
         size.width = fabs(size.width)
@@ -59,6 +65,11 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        
+        // super
+        super.viewWillAppear(animated)
+        
+        // notifications
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.playbackDidEnd),
                                                name: .AVPlayerItemDidPlayToEndTime,
@@ -67,15 +78,19 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
                                                selector: #selector(self.playbackDidEnd),
                                                name: .AVPlayerItemDidPlayToEndTime,
                                                object: self.savedPlayer?.currentItem)
+        
+        // start players if needed
         if (self.capturedPlayer?.currentItem != nil) {
             self.capturedPlayer?.play()
         }
         if (self.savedPlayer?.currentItem != nil) {
             self.savedPlayer?.play()
         }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self)
     }
     
@@ -149,7 +164,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         player?.pause()
         playerLayer?.removeFromSuperlayer()
         player = AVPlayer(url: videoURL)
-        print("player video size: \(player?.currentItemResolution()?.width ?? 0)x\(player?.currentItemResolution()?.height ?? 0)")
+        print("player video size: \(String(describing: player?.currentVideoTrackResolution().width)) x \(String(describing: player?.currentVideoTrackResolution().height))")
         playerLayer = AVPlayerLayer(player: player)
         playerLayer?.frame = (view?.bounds)!
         view?.layer.addSublayer(playerLayer!)
