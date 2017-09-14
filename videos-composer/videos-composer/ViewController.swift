@@ -116,6 +116,12 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         }
     }
     
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        get {
+            return .portrait
+        }
+    }
+    
     // MARK: methods override
     
     override func viewDidLoad() {
