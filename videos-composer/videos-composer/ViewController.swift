@@ -212,7 +212,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)!
         let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)!
         
-        
         let capturedDuration: CMTime = self.capturedPlayer!.currentItem!.asset.duration
         let savedDuration: CMTime = self.savedPlayer!.currentItem!.asset.duration
         
