@@ -60,6 +60,50 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     private var savedPlayer: AVPlayer?
     private var savedPlayerLayer: AVPlayerLayer?
     
+    private var composedVideoAsset: AVAsset? {
+        get {
+            
+            guard let capturedVideoTrack: AVAssetTrack = self.capturedPlayer?.currentVideoTrack()
+                , let savedVideoTrack: AVAssetTrack = self.savedPlayer?.currentVideoTrack() else {
+                    return nil
+            }
+            
+            let composition: AVMutableComposition = AVMutableComposition()
+            composition.naturalSize = capturedVideoTrack.naturalSize
+            
+            let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)!
+            let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)!
+            
+            let capturedDuration: CMTime = self.capturedPlayer!.currentItem!.asset.duration
+            let savedDuration: CMTime = self.savedPlayer!.currentItem!.asset.duration
+            
+            let firstRange: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: capturedDuration)
+            let secondRange: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: savedDuration)
+            
+            do {
+                
+                // add video tracks to the video mutable composition tracks
+                try videoTrack.insertTimeRange(firstRange, of: capturedVideoTrack, at: kCMTimeZero)
+                try videoTrack.insertTimeRange(secondRange, of: savedVideoTrack, at: capturedDuration)
+                
+                // add audio tracks (if exists) to the audio mutable composition tracks
+                if let capturedAutioTrack: AVAssetTrack = self.capturedPlayer?.currentAudioTrack() {
+                    try audioTrack.insertTimeRange(firstRange, of: capturedAutioTrack, at: kCMTimeZero)
+                }
+                if let savedAudioTrack: AVAssetTrack = self.savedPlayer?.currentAudioTrack() {
+                    try audioTrack.insertTimeRange(secondRange, of: savedAudioTrack, at: capturedDuration)
+                }
+                
+                return composition
+                
+            } catch {
+                print("error generating video")
+                return nil
+            }
+            
+        }
+    }
+    
     // MARK: properties override
     
     override public var shouldAutorotate: Bool {
@@ -145,7 +189,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction private func viewResult() {
-        guard let asset: AVAsset = self.getComposedVideo() else {
+        guard let asset: AVAsset = self.composedVideoAsset else {
             return
         }
         let player: AVPlayer = AVPlayer(playerItem: AVPlayerItem(asset: asset))
@@ -157,7 +201,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction private func saveResult() {
-        guard let asset: AVAsset = self.getComposedVideo() else {
+        guard let asset: AVAsset = self.composedVideoAsset else {
             return
         }
         self.saveAsset(asset)
@@ -196,48 +240,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         view?.layer.addSublayer(playerLayer!)
         player?.isMuted = true
         player?.play()
-    }
-    
-    private func getComposedVideo() -> AVAsset? {
-        
-        guard let capturedVideoTrack: AVAssetTrack = self.capturedPlayer?.currentVideoTrack()
-            , let savedVideoTrack: AVAssetTrack = self.savedPlayer?.currentVideoTrack() else {
-                return nil
-        }
-        
-        let composition: AVMutableComposition = AVMutableComposition()
-        composition.naturalSize = capturedVideoTrack.naturalSize
-        
-        let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)!
-        let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)!
-        
-        let capturedDuration: CMTime = self.capturedPlayer!.currentItem!.asset.duration
-        let savedDuration: CMTime = self.savedPlayer!.currentItem!.asset.duration
-        
-        let firstRange: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: capturedDuration)
-        let secondRange: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: savedDuration)
-        
-        do {
-            
-            // add video tracks to the video mutable composition tracks
-            try videoTrack.insertTimeRange(firstRange, of: capturedVideoTrack, at: kCMTimeZero)
-            try videoTrack.insertTimeRange(secondRange, of: savedVideoTrack, at: capturedDuration)
-            
-            // add audio tracks (if exists) to the audio mutable composition tracks
-            if let capturedAutioTrack: AVAssetTrack = self.capturedPlayer?.currentAudioTrack() {
-                try audioTrack.insertTimeRange(firstRange, of: capturedAutioTrack, at: kCMTimeZero)
-            }
-            if let savedAudioTrack: AVAssetTrack = self.savedPlayer?.currentAudioTrack() {
-                try audioTrack.insertTimeRange(secondRange, of: savedAudioTrack, at: capturedDuration)
-            }
-            
-            return composition
-            
-        } catch {
-            print("error generating video")
-            return nil
-        }
-        
     }
     
     private func saveAsset(_ asset: AVAsset) {
