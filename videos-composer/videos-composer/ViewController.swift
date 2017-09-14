@@ -22,16 +22,20 @@ extension AVPlayer {
         return tracks[0]
     }
     
-    func currentAudioTrack() -> AVAssetTrack? {
-        return self.currentTrackWithType(AVMediaType.audio)
+    var currentAudioTrack: AVAssetTrack? {
+        get {
+            return self.currentTrackWithType(AVMediaType.audio)
+        }
     }
     
-    func currentVideoTrack() -> AVAssetTrack? {
-        return self.currentTrackWithType(AVMediaType.video)
+    var currentVideoTrack: AVAssetTrack? {
+        get {
+            return self.currentTrackWithType(AVMediaType.video)
+        }
     }
     
     func currentVideoTrackResolution() -> CGSize {
-        guard let track: AVAssetTrack = self.currentVideoTrack() else {
+        guard let track: AVAssetTrack = self.currentVideoTrack else {
                 return CGSize.zero
         }
         let transform = track.preferredTransform
@@ -63,8 +67,8 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     private var composedVideoAsset: AVAsset? {
         get {
             
-            guard let capturedVideoTrack: AVAssetTrack = self.capturedPlayer?.currentVideoTrack()
-                , let savedVideoTrack: AVAssetTrack = self.savedPlayer?.currentVideoTrack() else {
+            guard let capturedVideoTrack: AVAssetTrack = self.capturedPlayer?.currentVideoTrack
+                , let savedVideoTrack: AVAssetTrack = self.savedPlayer?.currentVideoTrack else {
                     return nil
             }
             
@@ -87,10 +91,10 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
                 try videoTrack.insertTimeRange(secondRange, of: savedVideoTrack, at: capturedDuration)
                 
                 // add audio tracks (if exists) to the audio mutable composition tracks
-                if let capturedAutioTrack: AVAssetTrack = self.capturedPlayer?.currentAudioTrack() {
+                if let capturedAutioTrack: AVAssetTrack = self.capturedPlayer?.currentAudioTrack {
                     try audioTrack.insertTimeRange(firstRange, of: capturedAutioTrack, at: kCMTimeZero)
                 }
-                if let savedAudioTrack: AVAssetTrack = self.savedPlayer?.currentAudioTrack() {
+                if let savedAudioTrack: AVAssetTrack = self.savedPlayer?.currentAudioTrack {
                     try audioTrack.insertTimeRange(secondRange, of: savedAudioTrack, at: capturedDuration)
                 }
                 
