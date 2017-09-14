@@ -190,8 +190,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         } catch {
             print("error generating video")
         }
-        
-        
 
         print("go")
     }
