@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -49,26 +49,39 @@
                                 <rect key="frame" x="18" y="304.33333333333326" width="378" height="179.66666666666669"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VmD-iB-cKQ">
-                                <rect key="frame" x="366" y="492" width="30" height="30"/>
-                                <state key="normal" title="OK"/>
-                                <connections>
-                                    <action selector="validate" destination="BYZ-38-t0r" eventType="touchUpInside" id="zQy-85-nUf"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="0Vg-Qj-4gJ">
+                                <rect key="frame" x="18" y="492" width="378" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="23C-gr-KhV">
+                                        <rect key="frame" x="0.0" y="0.0" width="189" height="30"/>
+                                        <state key="normal" title="View"/>
+                                        <connections>
+                                            <action selector="viewResult" destination="BYZ-38-t0r" eventType="touchUpInside" id="q1t-Mg-5Bw"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FTn-Se-3vr">
+                                        <rect key="frame" x="189" y="0.0" width="189" height="30"/>
+                                        <state key="normal" title="Save"/>
+                                        <connections>
+                                            <action selector="saveResult" destination="BYZ-38-t0r" eventType="touchUpInside" id="oBb-8W-5WO"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="0Vg-Qj-4gJ" firstAttribute="top" secondItem="3Dh-s1-WYZ" secondAttribute="bottom" constant="8" id="333-ur-ekw"/>
+                            <constraint firstAttribute="trailing" secondItem="0Vg-Qj-4gJ" secondAttribute="trailing" constant="18" id="3Sb-eB-k3e"/>
                             <constraint firstItem="ZvO-TD-yEu" firstAttribute="top" secondItem="9fu-Yu-Qba" secondAttribute="bottom" constant="8" id="AZB-tR-Ien"/>
-                            <constraint firstAttribute="trailing" secondItem="VmD-iB-cKQ" secondAttribute="trailing" constant="18" id="HYV-NX-IOz"/>
                             <constraint firstAttribute="trailing" secondItem="3Dh-s1-WYZ" secondAttribute="trailing" constant="18" id="MOq-Ya-CHS"/>
                             <constraint firstItem="S3t-F6-dCt" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="PCz-c7-iNh"/>
                             <constraint firstItem="3Dh-s1-WYZ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="18" id="Xs3-Um-OA7"/>
                             <constraint firstItem="9fu-Yu-Qba" firstAttribute="top" secondItem="S3t-F6-dCt" secondAttribute="bottom" constant="8" id="dgI-RP-pb2"/>
                             <constraint firstItem="3Dh-s1-WYZ" firstAttribute="top" secondItem="ZvO-TD-yEu" secondAttribute="bottom" constant="8" id="dtV-dI-3Ri"/>
-                            <constraint firstItem="VmD-iB-cKQ" firstAttribute="top" secondItem="3Dh-s1-WYZ" secondAttribute="bottom" constant="8" id="fjE-12-Npa"/>
                             <constraint firstItem="9fu-Yu-Qba" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="iyx-1M-mWG"/>
                             <constraint firstItem="ZvO-TD-yEu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="k0I-5v-snt"/>
+                            <constraint firstItem="0Vg-Qj-4gJ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="18" id="kQx-RZ-fv8"/>
                             <constraint firstItem="3Dh-s1-WYZ" firstAttribute="top" secondItem="ZvO-TD-yEu" secondAttribute="bottom" constant="8" id="oIA-2M-pz3"/>
                             <constraint firstItem="ZvO-TD-yEu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="18" id="vBE-Th-af8"/>
                             <constraint firstItem="S3t-F6-dCt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xra-00-Qj2"/>
