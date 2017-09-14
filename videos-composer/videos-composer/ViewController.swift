@@ -191,7 +191,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         player?.pause()
         playerLayer?.removeFromSuperlayer()
         player = AVPlayer(url: videoURL)
-        print("player video size: \(String(describing: player?.currentVideoTrackResolution().width)) x \(String(describing: player?.currentVideoTrackResolution().height))")
         playerLayer = AVPlayerLayer(player: player)
         playerLayer?.frame = (view?.bounds)!
         view?.layer.addSublayer(playerLayer!)
