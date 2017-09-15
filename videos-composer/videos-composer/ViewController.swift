@@ -66,45 +66,11 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     private var composedVideoAsset: AVAsset? {
         get {
-            
-            guard let capturedVideoTrack: AVAssetTrack = self.capturedPlayer?.currentVideoTrack
-                , let savedVideoTrack: AVAssetTrack = self.savedPlayer?.currentVideoTrack else {
+            guard let capturedItem: AVPlayerItem = self.capturedPlayer?.currentItem
+                , let savedItem: AVPlayerItem = self.savedPlayer?.currentItem else {
                     return nil
             }
-            
-            let composition: AVMutableComposition = AVMutableComposition()
-            composition.naturalSize = capturedVideoTrack.naturalSize
-            
-            let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)!
-            let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)!
-            
-            let capturedDuration: CMTime = self.capturedPlayer!.currentItem!.asset.duration
-            let savedDuration: CMTime = self.savedPlayer!.currentItem!.asset.duration
-            
-            let firstRange: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: capturedDuration)
-            let secondRange: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: savedDuration)
-            
-            do {
-                
-                // add video tracks to the video mutable composition tracks
-                try videoTrack.insertTimeRange(firstRange, of: capturedVideoTrack, at: kCMTimeZero)
-                try videoTrack.insertTimeRange(secondRange, of: savedVideoTrack, at: capturedDuration)
-                
-                // add audio tracks (if exists) to the audio mutable composition tracks
-                if let capturedAutioTrack: AVAssetTrack = self.capturedPlayer?.currentAudioTrack {
-                    try audioTrack.insertTimeRange(firstRange, of: capturedAutioTrack, at: kCMTimeZero)
-                }
-                if let savedAudioTrack: AVAssetTrack = self.savedPlayer?.currentAudioTrack {
-                    try audioTrack.insertTimeRange(secondRange, of: savedAudioTrack, at: capturedDuration)
-                }
-                
-                return composition
-                
-            } catch {
-                print("error generating video")
-                return nil
-            }
-            
+            return VideosComposer.AppendVideos([capturedItem, savedItem])            
         }
     }
     
@@ -112,7 +78,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     override public var shouldAutorotate: Bool {
         get {
-            return false;
+            return false
         }
     }
     
@@ -158,7 +124,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         NotificationCenter.default.removeObserver(self)
     }
     
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
