@@ -70,7 +70,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
                 , let savedItem: AVPlayerItem = self.savedPlayer?.currentItem else {
                     return nil
             }
-            return VideosComposer.AppendVideos([capturedItem, savedItem])            
+            return VideosComposer.AppendVideos([capturedItem, savedItem])
         }
     }
     
@@ -182,6 +182,21 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         self.saveAsset(asset)
     }
     
+    @IBAction private func instagramResult() {
+        guard let asset: AVAsset = self.composedVideoAsset else {
+            return
+        }
+        self.saveAsset(asset) { (url: URL, ok: Bool) in
+            print("url: \(url), ok: \(ok)")
+            DispatchQueue.main.async {
+                if ok, let insta: URL = URL(string: "instagram://camera"), UIApplication.shared.canOpenURL(insta) {
+                    print(insta)
+                    UIApplication.shared.open(insta)
+                }
+            }
+        }
+    }
+    
     // MARK: methods
     
     private func getVideo(_ type: UIImagePickerControllerSourceType) {
@@ -217,7 +232,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         player?.play()
     }
     
-    private func saveAsset(_ asset: AVAsset) {
+    private func saveAsset(_ asset: AVAsset, completion: ((URL, Bool) -> Void)? = nil) {
         let exportPath: String = NSTemporaryDirectory().appending("/tmp.mov")
         if (FileManager.default.fileExists(atPath: exportPath)) {
             do {
@@ -235,6 +250,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: exportURL)
             }, completionHandler: { (ok, error) in
                 print("export ok? \(ok)")
+                completion?(exportURL, ok)
             })
         }
     }

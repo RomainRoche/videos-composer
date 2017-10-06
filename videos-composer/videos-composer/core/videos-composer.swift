@@ -16,7 +16,7 @@ class VideosComposer: NSObject {
         guard items.count > 0 else { return nil }
         
         let composition: AVMutableComposition = AVMutableComposition()
-        let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid)!
+        let videoTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.video,preferredTrackID: kCMPersistentTrackID_Invalid)!
         let audioTrack: AVMutableCompositionTrack = composition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)!
         
         do {
