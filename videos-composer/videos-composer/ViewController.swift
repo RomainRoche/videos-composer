@@ -187,10 +187,8 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
             return
         }
         self.saveAsset(asset) { (url: URL, ok: Bool) in
-            print("url: \(url), ok: \(ok)")
             DispatchQueue.main.async {
                 if ok, let insta: URL = URL(string: "instagram://camera"), UIApplication.shared.canOpenURL(insta) {
-                    print(insta)
                     UIApplication.shared.open(insta)
                 }
             }
