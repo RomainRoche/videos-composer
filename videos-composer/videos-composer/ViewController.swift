@@ -196,8 +196,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction private func facebookResult() {
-        // fuck, need sdk and shit
-        // i feel like i'll have to cocoapod some stuff
+        // need to add a SDK
     }
     
     @IBAction private func twitterResult() {
