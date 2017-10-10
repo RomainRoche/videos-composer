@@ -11,6 +11,7 @@ import MobileCoreServices
 import AVFoundation
 import AVKit
 import PhotosUI
+import TwitterKit
 
 extension AVPlayer {
     
@@ -200,7 +201,13 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction private func twitterResult() {
-        
+        Twitter.sharedInstance().logIn { (twSession, error) in
+            if error == nil, let session = twSession {
+                print("signed in as \(session.userName)")
+            } else {
+                print("Twitter login error: \(error?.localizedDescription ?? "no error description")")
+            }
+        }
     }
     
     // MARK: methods
