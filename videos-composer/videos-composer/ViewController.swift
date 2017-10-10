@@ -195,6 +195,15 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         }
     }
     
+    @IBAction private func facebookResult() {
+        // fuck, need sdk and shit
+        // i feel like i'll have to cocoapod some stuff
+    }
+    
+    @IBAction private func twitterResult() {
+        
+    }
+    
     // MARK: methods
     
     private func getVideo(_ type: UIImagePickerControllerSourceType) {
