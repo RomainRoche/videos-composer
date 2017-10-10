@@ -198,6 +198,15 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     
     @IBAction private func facebookResult() {
         // need to add a SDK
+        guard let asset: AVAsset = self.composedVideoAsset else {
+            return
+        }
+        self.saveAsset(asset) { (url, ok) -> Void in
+            if ok {
+                let sharer: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                self.present(sharer, animated: true)
+            }
+        }
     }
     
     @IBAction private func twitterResult() {
