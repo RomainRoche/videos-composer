@@ -75,6 +75,8 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         }
     }
     
+    private var twitterSession: TWTRSession?
+    
     // MARK: properties override
     
     override public var shouldAutorotate: Bool {
@@ -180,14 +182,14 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         guard let asset: AVAsset = self.composedVideoAsset else {
             return
         }
-        self.saveAsset(asset)
+        self.saveAssetToLibrary(asset)
     }
     
     @IBAction private func instagramResult() {
         guard let asset: AVAsset = self.composedVideoAsset else {
             return
         }
-        self.saveAsset(asset) { (url: URL, ok: Bool) in
+        self.saveAssetToLibrary(asset) { (ok: Bool) in
             DispatchQueue.main.async {
                 if ok, let insta: URL = URL(string: "instagram://camera"), UIApplication.shared.canOpenURL(insta) {
                     UIApplication.shared.open(insta)
@@ -201,7 +203,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         guard let asset: AVAsset = self.composedVideoAsset else {
             return
         }
-        self.saveAsset(asset) { (url, ok) -> Void in
+        self.exportAsset(asset) { (url, ok) -> Void in
             if ok {
                 let sharer: UIActivityViewController = UIActivityViewController(activityItems: [url], applicationActivities: nil)
                 self.present(sharer, animated: true)
@@ -210,16 +212,47 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     @IBAction private func twitterResult() {
-        Twitter.sharedInstance().logIn { (twSession, error) in
-            if error == nil, let session = twSession {
-                print("signed in as \(session.userName)")
-            } else {
-                print("Twitter login error: \(error?.localizedDescription ?? "no error description")")
+        // login
+        self.loginToTwitterIfNeeded { (ok: Bool) -> Void in
+            guard let asset: AVAsset = self.composedVideoAsset else {
+                return
             }
+            // export asset
+            self.exportAsset(asset, completion: { (url, ok) in
+                guard ok else {return}
+                do {
+                    // present twitter composer with preview and video data
+                    let previewGenerator: AVAssetImageGenerator = AVAssetImageGenerator(asset: asset)
+                    let img = try previewGenerator.copyCGImage(at: CMTimeMake(1, 1), actualTime: nil)
+                    let data: Data = try Data(contentsOf: url)
+                    DispatchQueue.main.async {
+                        let tw: TWTRComposerViewController = TWTRComposerViewController(initialText: "", image: UIImage(cgImage: img), videoData: data)
+                        self.present(tw, animated: true)
+                    }
+                }
+                catch let error as NSError {
+                    print("error: \(error.localizedDescription)")
+                }
+            })
         }
     }
     
     // MARK: methods
+    
+    private func loginToTwitterIfNeeded(_ completion: ((Bool) -> Void)? = nil) {
+        var valid = false
+        if let session = self.twitterSession {
+            valid = !Twitter.sharedInstance().sessionStore.isExpiredSession(session, error: NSError())
+        }
+        if !valid {
+            Twitter.sharedInstance().logIn { (session: TWTRSession?, error: Error?) in
+                self.twitterSession = session
+                completion?(session != nil && error == nil)
+            }
+        } else {
+            completion?(true)
+        }
+    }
     
     private func getVideo(_ type: UIImagePickerControllerSourceType) {
         let picker: UIImagePickerController = UIImagePickerController()
@@ -254,7 +287,7 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         player?.play()
     }
     
-    private func saveAsset(_ asset: AVAsset, completion: ((URL, Bool) -> Void)? = nil) {
+    private func exportAsset(_ asset: AVAsset, completion: ((URL, Bool) -> Void)? = nil) {
         let exportPath: String = NSTemporaryDirectory().appending("/tmp.mov")
         if (FileManager.default.fileExists(atPath: exportPath)) {
             do {
@@ -268,12 +301,20 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         exporter.outputURL = exportURL
         exporter.outputFileType = AVFileType.mov
         exporter.exportAsynchronously {
-            PHPhotoLibrary.shared().performChanges({
-                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: exportURL)
-            }, completionHandler: { (ok, error) in
-                print("export ok? \(ok)")
-                completion?(exportURL, ok)
-            })
+            completion?(exportURL, exporter.status == .completed)
+        }
+    }
+    
+    private func saveAssetToLibrary(_ asset: AVAsset, completion: ((Bool) -> Void)? = nil) {
+        self.exportAsset(asset) { (url, ok) in
+            if ok {
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+                }, completionHandler: { (ok, error) in
+                    print("export ok? \(ok)")
+                    completion?(ok)
+                })
+            }
         }
     }
 
