@@ -30,10 +30,11 @@ class VideosComposer: NSObject {
                     let range: CMTimeRange = CMTimeRange(start: kCMTimeZero, duration: item.asset.duration)
                     let duration: CMTime = composition.duration
                     
-                    let video = item.asset.tracks(withMediaType: .video)[0]
+                    let video: AVAssetTrack = item.asset.tracks(withMediaType: .video)[0]
                     try videoTrack.insertTimeRange(range, of: video, at: duration)
                     if (setSize) {
                         composition.naturalSize = video.naturalSize
+                        videoTrack.preferredTransform = video.preferredTransform
                         setSize = false
                     }
                     
