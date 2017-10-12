@@ -75,8 +75,6 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
         }
     }
     
-    private var twitterSession: TWTRSession?
-    
     // MARK: properties override
     
     override public var shouldAutorotate: Bool {
@@ -240,13 +238,8 @@ class VCCaptureViewController: UIViewController, UIImagePickerControllerDelegate
     // MARK: methods
     
     private func loginToTwitterIfNeeded(_ completion: ((Bool) -> Void)? = nil) {
-        var valid = false
-        if let session = self.twitterSession {
-            valid = !Twitter.sharedInstance().sessionStore.isExpiredSession(session, error: NSError())
-        }
-        if !valid {
+        if Twitter.sharedInstance().sessionStore.session() == nil {
             Twitter.sharedInstance().logIn { (session: TWTRSession?, error: Error?) in
-                self.twitterSession = session
                 completion?(session != nil && error == nil)
             }
         } else {
